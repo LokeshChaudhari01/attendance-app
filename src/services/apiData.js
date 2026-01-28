@@ -1,34 +1,86 @@
-import supabase from "./supabase";
+const BASE_URL = import.meta.env.VITE_API_URL;
 
-export async function  getAllData() {
-  const { data, error } = await supabase
-    .from("Subjects")
-    .select("*")
-    .order("id", { ascending: true });
+// ---------- CORE FETCH HELPER ----------
+async function fetchWithAuth(url, options = {}) {
+  const res = await fetch(url, {
+    method: options.method || "GET", // <-- always explicit
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    },
+    body: options.body || null,
+  });
 
-  if (error) throw error;
+  let data;
+  try {
+    data = await res.json();
+  } catch {
+    data = null;
+  }
+
+  if (!res.ok) {
+    throw new Error(data?.message || "Request failed");
+  }
+
   return data;
 }
 
-export async function updateTotalLectures({ id, totalLecs, delta }) {
-  return supabase
-    .from("Subjects")
-    .update({ totalLecs: totalLecs + delta })
-    .eq("id", id)
-    .select()
-    .single();
+// ============ AUTH ============
+
+export function signup({ rollNumber, password }) {
+  return fetchWithAuth(`${BASE_URL}/auth/signup`, {
+    method: "POST",
+    body: JSON.stringify({ rollNumber, password }),
+  });
 }
 
+export function login({ rollNumber, password }) {
+  return fetchWithAuth(`${BASE_URL}/auth/login`, {
+    method: "POST",
+    body: JSON.stringify({ rollNumber, password }),
+  });
+}
 
-export async function updateAttendedLectures({ id, attendedLecs, delta  }) {
-  const { data, error } = await supabase
-    .from("Subjects")
-    .update({ attendedLecs: attendedLecs + delta })
-    .eq("id", Number(id))
-    .select()
-    .single();
+export function logout() {
+  return fetchWithAuth(`${BASE_URL}/auth/logout`, {
+    method: "POST",
+  });
+}
 
-  if (error) throw error;
+export function getMe() {
+  console.log("called getMe");
+  return fetchWithAuth(`${BASE_URL}/auth/me`, {
+    method: "POST",
+  });
+}
 
-  return data;
+// ============ STUDENT ============
+
+export function getMyAttendance() {
+  return fetchWithAuth(`${BASE_URL}/student/attendance`, {
+    method: "GET",
+  });
+}
+
+export function updateTotalLectures({
+  attendanceId,
+  deltaTotal,
+  deltaAttended,
+}) {
+  return fetchWithAuth(`${BASE_URL}/student/attendance/${attendanceId}`, {
+    method: "PATCH",
+    body: JSON.stringify({ deltaTotal, deltaAttended }),
+  });
+}
+
+export function updateAttendedLectures({
+  attendanceId,
+  deltaTotal,
+  deltaAttended,
+}) {
+  return fetchWithAuth(`${BASE_URL}/student/attendance/${attendanceId}`, {
+    method: "PATCH",
+    body: JSON.stringify({ deltaTotal, deltaAttended }),
+  });
 }

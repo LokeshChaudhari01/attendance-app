@@ -13,16 +13,3 @@ export function useUpdateTotalLectures() {
 
   return { isLoading, mutate };
 }
-
-export function useUpdateTotalLectures() {
-  const queryClient = useQueryClient();
-
-  const { isLoading, mutate } = useMutation({
-    mutationFn: updateTotalLectures,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["subjects"] });
-    },
-  });
-
-  return { isLoading, mutate };
-}

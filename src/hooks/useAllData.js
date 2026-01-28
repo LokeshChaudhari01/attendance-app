@@ -1,19 +1,21 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  getAllData,
+  getMyAttendance,
   updateAttendedLectures,
   updateTotalLectures,
 } from "../services/apiData";
 
 export function useSubjects() {
-  const { isLoading, data, error } = useQuery({
-    queryKey: ["subjects"],
-    queryFn: getAllData,
+  const { isLoading, data, error ,isError} = useQuery({
+    queryKey: ["attendance"],
+    queryFn: getMyAttendance,
   });
+
   return {
     isLoading,
-    data,
+    data: data?.attendance || [],
     error,
+    isError,
   };
 }
 
@@ -23,10 +25,10 @@ export function useUpdateTotalLectures() {
   const { isLoading, mutate } = useMutation({
     mutationFn: updateTotalLectures,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["subjects"] });
+      queryClient.invalidateQueries({ queryKey: ["attendance"] });
     },
   });
-  
+
   return { isLoading, mutate };
 }
 
@@ -36,7 +38,7 @@ export function useUpdateAttendedLectures() {
   const { isLoading, mutate } = useMutation({
     mutationFn: updateAttendedLectures,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["subjects"] });
+      queryClient.invalidateQueries({ queryKey: ["attendance"] });
     },
   });
 
