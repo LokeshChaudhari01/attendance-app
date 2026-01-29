@@ -10,7 +10,7 @@ export function useLogout() {
     try {
       await logout(); // backend clears cookie
       setUser(null); // clear frontend auth state
-      navigate("/login"); // redirect like real apps
+      navigate("/login", { replace: true }); // redirect like real apps
     } catch (err) {
       console.error("Logout failed:", err.message);
       alert("Logout failed:", err.message);

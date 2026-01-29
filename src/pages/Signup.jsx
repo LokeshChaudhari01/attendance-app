@@ -32,7 +32,7 @@ export default function Signup() {
               Roll Number
             </label>
             <input
-              placeholder="e.g. bt24cse066"
+              placeholder="e.g. bt24cse214"
               value={rollNumber}
               onChange={(e) => setRoll(e.target.value)}
               className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"

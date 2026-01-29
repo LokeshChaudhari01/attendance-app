@@ -14,7 +14,6 @@ import Navbar from "./components/NAvbar";
 import { AuthProvider } from "./context/AuthContext";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -65,7 +64,6 @@ function App() {
           </main>
         </BrowserRouter>
       </AuthProvider>
-
     </QueryClientProvider>
   );
 }

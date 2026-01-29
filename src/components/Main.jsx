@@ -3,11 +3,12 @@ import Card from "./Card";
 import { useSubjects } from "../hooks/useAllData";
 import Navbar from "./NAvbar";
 import Spinner from "./Spinner";
+import NotFound from "../pages/NotFound";
 
 function Main() {
   const { isLoading, data: dataObj, error, isError } = useSubjects();
 
-  if (isError) return <Navbar>there is an error : {error.message}</Navbar>;
+  if (isError) return <NotFound>there is an error : {error.message}</NotFound>;
   if (isLoading) return <Spinner />;
 
   return (
